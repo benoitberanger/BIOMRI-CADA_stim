@@ -37,7 +37,7 @@ EchoStart(mfilename)
 %   Screen   %
 %%%%%%%%%%%%%%
 
-Parameters.Video.ScreenBackgroundColor = [128 128 128]; % [R G B] ( from 0 to 255 )
+Parameters.Video.ScreenBackgroundColor = [ 0 0 0 ]; % [R G B] ( from 0 to 255 )
 
 %%%%%%%%%%%%
 %   Text   %
@@ -55,6 +55,12 @@ Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
 Parameters.Cross.ScreenRatio     = 0.10;          % ratio : dim   = ScreenHeight*ratio_screen
 Parameters.Cross.lineWidthRatio  = 0.05;          % ratio : width = dim         *ratio_width
 Parameters.Cross.Color           = [255 255 255]; % [R G B] ( from 0 to 255 )
+
+% Checkerboard
+Parameters.Checkerboard.Frequency     = 6;             % Hz
+Parameters.Checkerboard.nSquareWidth  = 16;            %
+Parameters.Checkerboard.FlicColor     = [255 255 255]; % [R G B] ( from 0 to 255 )
+Parameters.Checkerboard.FlacColor     = [255 255 255]; % [R G B] ( from 0 to 255 )
 
 
 %%%%%%%%%%%%%%

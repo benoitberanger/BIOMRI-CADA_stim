@@ -26,7 +26,8 @@ try
     
     %% Prepare objects
     
-    CROSS = CADA.Prepare.Cross;
+    CROSS        = CADA.Prepare.Cross;
+    CHECKERBOARD = CADA.Prepare.Checkerboard;
     
     
     %% Eyelink
@@ -35,6 +36,8 @@ try
     
     
     %% Go
+    
+    dt = 1 / S.Parameters.Checkerboard.Frequency;
     
     % Initialize some variables
     EXIT = 0;
@@ -107,6 +110,10 @@ try
                     end
                 end
                 
+                CHECKERBOARD.DrawFlic
+                Screen('DrawingFinished', S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr);
+                
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []});
@@ -116,8 +123,13 @@ try
                 secs = conditionFlipOnset;
                 while secs < when
                     
-                    % Screen('DrawingFinished', S.PTB.wPtr);
-                    % lastFlipOnset = Screen('Flip', S.PTB.wPtr);
+                    CHECKERBOARD.DrawFlac
+                    Screen('DrawingFinished', S.PTB.wPtr);
+                    lastFlipOnset = Screen('Flip', S.PTB.wPtr, lastFlipOnset + dt);
+                    
+                    CHECKERBOARD.DrawFlic
+                    Screen('DrawingFinished', S.PTB.wPtr);
+                    lastFlipOnset = Screen('Flip', S.PTB.wPtr, lastFlipOnset + dt);
                     
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
