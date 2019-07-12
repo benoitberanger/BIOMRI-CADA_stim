@@ -118,7 +118,7 @@ try
                 ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []});
                 
-                when = conditionFlipOnset + EP.Data{evt,3} - S.PTB.slack;
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 secs = conditionFlipOnset;
                 while secs < when
