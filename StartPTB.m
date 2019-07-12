@@ -54,9 +54,7 @@ Screen('Preference', 'VisualDebugLevel', 1);
 switch S.WindowedMode
     case 'Off'
         if IsLinux && length(Screen('Screens')) == 1
-            [ScreenWidth, ScreenHeight]=Screen('WindowSize', S.ScreenID);
-            SmallWindow = [0 0 1024 768];
-            WindowRect = CenterRectOnPoint( SmallWindow , ScreenWidth/2 , ScreenHeight/2 );
+            WindowRect = [0 0 1024 768];
         else
             WindowRect = [];
         end
@@ -64,11 +62,10 @@ switch S.WindowedMode
         factor = 0.5;
         [ScreenWidth, ScreenHeight]=Screen('WindowSize', S.ScreenID);
         if IsLinux && length(Screen('Screens')) == 1
-            SmallWindow = [0 0 1024 768];
+            WindowRect = [0 0 1024 768];
         else
-            SmallWindow = ScaleRect( [0 0 ScreenWidth ScreenHeight] , factor , factor );
+            WindowRect = ScaleRect( [0 0 ScreenWidth ScreenHeight] , factor , factor );
         end
-        WindowRect = CenterRectOnPoint( SmallWindow , ScreenWidth/2 , ScreenHeight/2 );
     otherwise
 end
 
