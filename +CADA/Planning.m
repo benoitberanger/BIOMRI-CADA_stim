@@ -5,26 +5,30 @@ if nargout < 1 % only to plot the paradigme when we execute the function outside
     S.OperationMode = 'Acquisition';
 end
 
+TR = 2.76; % seconds
+
 
 %% Paradigme
 
 switch S.OperationMode
     case 'Acquisition'
-        Parameters.InitRestDuration    = 60; % second
-        Parameters.RestDuration        = 30; % second
-        Parameters.StimDuration        = 40; % second
-        Parameters.NrRepetitions       = 4;
+        Parameters.InitRestDuration    = 60;         % second
+        Parameters.RestDuration        = [40 40+TR]; % second
+        Parameters.StimDuration        = 40;         % second
+        Parameters.NrRepetitions       = 3;
     case 'FastDebug'
-        Parameters.InitRestDuration    = 1; % second
-        Parameters.RestDuration        = 2; % second
-        Parameters.StimDuration        = 5; % second
+        Parameters.InitRestDuration    = 1;          % second
+        Parameters.RestDuration        = [2 2.5];    % second
+        Parameters.StimDuration        = 5;          % second
         Parameters.NrRepetitions       = 2;
     case 'RealisticDebug'
-        Parameters.InitRestDuration    = 1; % second
-        Parameters.RestDuration        = 2; % second
-        Parameters.StimDuration        = 5; % second
+        Parameters.InitRestDuration    = 1;          % second
+        Parameters.RestDuration        = [2 2.5];    % second
+        Parameters.StimDuration        = 5;          % second
         Parameters.NrRepetitions       = 2;
 end
+
+jitter = Shuffle(TR/Parameters.NrRepetitions * rand(1,3) + linspace(0,TR - TR/Parameters.NrRepetitions,3));
 
 
 %% Define a planning <--- paradigme
@@ -49,8 +53,8 @@ EP.AddPlanning({ 'Rest' NextOnset(EP) Parameters.InitRestDuration })
 
 for evt = 1 : Parameters.NrRepetitions
     
-    EP.AddPlanning({ 'Stim' NextOnset(EP) Parameters.StimDuration })
-    EP.AddPlanning({ 'Rest' NextOnset(EP) Parameters.RestDuration })
+    EP.AddPlanning({ 'Stim' NextOnset(EP) Parameters.StimDuration                  })
+    EP.AddPlanning({ 'Rest' NextOnset(EP) Parameters.RestDuration(1) + jitter(evt) })
     
 end
 
