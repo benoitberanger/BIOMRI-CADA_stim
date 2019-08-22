@@ -30,11 +30,17 @@ end
 %% Squares postion computation
 
 % Number of pixel of the squares wide
-Square_Wide_tempo = ...
-    ScreenWidth/nSquareWidth;
+SquareSize  = ScreenWidth /nSquareWidth;
 
-X = 0 : Square_Wide_tempo : ScreenWidth - Square_Wide_tempo ;
-Y = 0 : Square_Wide_tempo : ScreenHeight - Square_Wide_tempo ;
+X = 0 : SquareSize : ScreenWidth ;
+Y = 0 : SquareSize : ScreenHeight;
+
+if mod(length(X),2)
+    X(end+1) = X(end) + SquareSize;
+end
+if mod(length(Y),2)
+    Y(end+1) = Y(end) + SquareSize;
+end
 
 % Creation of a grid : position of each square on the screen
 [ X_Grid , Y_Grid ] = meshgrid( X , Y );
@@ -60,8 +66,8 @@ Squares_Ypos2 = Squares_Ypos_reshaped(~CB_reshaped);
 % Sqares position such as : [ X1 Y1 X2 Y2 ;
 %                             X1 Y1 X2 Y2 ;
 %                             ...         ]
-Checkerboard_1 = [Squares_Xpos1; Squares_Ypos1; Squares_Xpos1 + Square_Wide_tempo; Squares_Ypos1 + Square_Wide_tempo];
-Checkerboard_2 = [Squares_Xpos2; Squares_Ypos2; Squares_Xpos2 + Square_Wide_tempo; Squares_Ypos2 + Square_Wide_tempo];
+Checkerboard_1 = [Squares_Xpos1; Squares_Ypos1; Squares_Xpos1 + SquareSize; Squares_Ypos1 + SquareSize];
+Checkerboard_2 = [Squares_Xpos2; Squares_Ypos2; Squares_Xpos2 + SquareSize; Squares_Ypos2 + SquareSize];
 
 
 %% Saving data

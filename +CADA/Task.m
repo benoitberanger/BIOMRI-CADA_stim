@@ -70,7 +70,7 @@ try
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
-                RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []});
+                RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []                });
                 
                 when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,9 +116,9 @@ try
                 
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
-                RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []});
+                RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime      [] []                });
                 
-                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack - dt;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 secs = conditionFlipOnset;
                 while secs < when
@@ -156,6 +156,7 @@ try
                             fprintf('Stopped Stim   channel=1 stimulation \n')
                     end
                 end
+                
                 
             otherwise % ---------------------------------------------------
                 
