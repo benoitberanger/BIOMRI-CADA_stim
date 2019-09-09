@@ -1,7 +1,7 @@
 function SendParPortMessage( message )
 global S
 
-if strcmp( S.StimONOFF , 'ON' )
+if strcmp( S.ParPortMessages , 'On' )
     
     % Send Trigger
     WriteParPort( S.ParPortMessages.(message) );
