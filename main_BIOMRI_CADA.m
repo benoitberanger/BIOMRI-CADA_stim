@@ -2,7 +2,6 @@ function main_BIOMRI_CADA(hObject, ~)
 % BIOMRI_CADA_main is the main program, calling the different tasks and
 % routines, accoding to the paramterts defined in the GUI
 
-
 %% GUI : open a new one or retrive data from the current one
 
 if nargin == 0
