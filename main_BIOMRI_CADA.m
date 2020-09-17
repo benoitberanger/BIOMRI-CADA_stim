@@ -35,8 +35,17 @@ S.TimeStampFile = datestr(now, 30                ); % to sort automatically by t
 
 switch get(hObject,'Tag')
     
-    case 'pushbutton_CADA'
-        Task = 'CADA';
+    case 'pushbutton_CADA_2'
+        Task = 'CADA_2';
+        
+    case 'pushbutton_CADA_3'
+        Task = 'CADA_3';
+        
+    case 'pushbutton_CADA_5'
+        Task = 'CADA_5';
+        
+    case 'pushbutton_CADA_10'
+        Task = 'CADA_10';
         
     case 'pushbutton_EyelinkCalibration'
         Task = 'EyelinkCalibration';
@@ -158,7 +167,6 @@ end
 %% GUI : Parallel port ?
 
 switch get( handles.checkbox_ParPort , 'Value' )
-    
     case 1
         ParPort = 'On';
     case 0
@@ -167,45 +175,6 @@ end
 S.ParPort = ParPort;
 S.ParPortMessages = Common.PrepareParPort;
 handles.ParPort    = ParPort;
-
-
-%% GUI : Task : Stim ON / OFF ?
-
-if isempty(get(handles.uipanel_StimOnOff,'SelectedObject'))
-    error('Select Stim ON / OFF')
-end
-
-switch get(get(handles.uipanel_StimOnOff,'SelectedObject'),'Tag')
-    case 'radiobutton_StimON'
-        StimONOFF = 'ON';
-        
-        switch Task
-            
-            case 'CADA'
-                
-                % @FTDI_VIBRA_IRM
-                if isfield(handles, 'FTDI')
-                    S.FTDI = handles.FTDI;
-                    v1 = str2double(get(handles.edit_VALVE_1,'String'));
-                    v2 = str2double(get(handles.edit_VALVE_2,'String'));
-                    v3 = str2double(get(handles.edit_VALVE_3,'String'));
-                    v4 = str2double(get(handles.edit_VALVE_4,'String'));
-                    S.FTDI.SetValue([v1 v2 v3 v4]); % update valve aperture
-                else
-                    error('FTDI : Not Opened')
-                end
-                
-            otherwise
-                % pass
-        end
-        
-    case 'radiobutton_StimOFF'
-        StimONOFF = 'OFF';
-    otherwise
-        warning('BIOMRI_CADA:StimONOFF','Error in StimONOFF')
-end
-
-S.StimONOFF = StimONOFF;
 
 
 %% GUI : Check if Eyelink toolbox is available
@@ -301,8 +270,17 @@ EchoStart(Task)
 
 switch Task
     
-    case 'CADA'
-        TaskData = CADA.Task;
+    case 'CADA_2'
+        TaskData = CADA.Task(2);
+        
+    case 'CADA_3'
+        TaskData = CADA.Task(3);
+        
+    case 'CADA_5'
+        TaskData = CADA.Task(5);
+        
+    case 'CADA_10'
+        TaskData = CADA.Task(10);
         
     case 'EyelinkCalibration'
         Eyelink.Calibration(S.PTB.wPtr);

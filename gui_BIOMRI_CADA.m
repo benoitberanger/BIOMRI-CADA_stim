@@ -60,7 +60,7 @@ else % Create the figure
     
     panelProp.interWidth = 0.01;
     panelProp.vect  = ...
-        [0.75 2 3 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
+        [0.75 2 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
     
     panelProp.vectLength    = length(panelProp.vect);
     panelProp.vectTotal     = sum(panelProp.vect);
@@ -482,29 +482,6 @@ else % Create the figure
         'Callback','Eyelink.ForceShutDown');
     
     
-    %% Panel : GUI_VIBRA_IRM
-    
-    panelProp.countP = panelProp.countP - 1;
-    
-    p_vibra.x = panelProp.xposP;
-    p_vibra.w = panelProp.wP;
-    
-    p_vibra.y = panelProp.yposP(panelProp.countP);
-    p_vibra.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
-    
-    handles.uipanel_VIBRA_IRM = uibuttongroup(handles.(mfilename),...
-        'Title','VIBRA_IRM',...
-        'Units', 'Normalized',...
-        'Position',[p_vibra.x p_vibra.y p_vibra.w p_vibra.h],...
-        'BackgroundColor',figureBGcolor);
-    
-    handle_VIBRA_IRM = FTDI_VIBRA_IRM.GUI_VIBRA_IRM( handles.uipanel_VIBRA_IRM );
-    f = fieldnames(handle_VIBRA_IRM);
-    for i = 1:length(f)
-        handles.(f{i}) = handle_VIBRA_IRM.(f{i});
-    end
-    
-    
     %% Panel : Task
     
     panelProp.countP = panelProp.countP - 1;
@@ -521,90 +498,30 @@ else % Create the figure
         'Position',[p_task.x p_task.y p_task.w p_task.h],...
         'BackgroundColor',figureBGcolor);
     
-    p_task = Object_Xpos_Xwidth_dispatcher( p_task, 1 , 0.05 );
+    list_num = [2 3 5 10];
+    p_task = Object_Xpos_Xwidth_dispatcher( p_task, ones(1,length(list_num)) , 0.05 );
     
     % ---------------------------------------------------------------------
-    % Pushbutton : PNEU
+    % Pushbutton : Task i
     
-    p_task.count  = p_task.count + 1;
-    b_CADA.x   = p_task.xpos(p_task.count);
-    b_CADA.w   = p_task.xwidth(p_task.count);
-    b_CADA.y   = 0.05;
-    b_CADA.h   = 0.50;
-    b_CADA.tag = 'pushbutton_CADA';
-    handles.(b_CADA.tag) = uicontrol(handles.uipanel_Task,...
-        'Style','pushbutton',...
-        'Units', 'Normalized',...
-        'Position',[b_CADA.x b_CADA.y b_CADA.w b_CADA.h],...
-        'String','CADA',...
-        'BackgroundColor',buttonBGcolor,...
-        'Tag',b_CADA.tag,...
-        'Callback',@main_BIOMRI_CADA);
-    
-    
-    %% Panel : Stim ON / OFF
-    
-    p_task.count = 0;
-    p_task.count = p_task.count + 1;
-    
-    p_stimonoff.x   = p_task.xpos(p_task.count);
-    % p_stimonoff.w   = p_task.xwidth(p_task.count);
-    p_stimonoff.w   = 0.9;
-    
-    p_stimonoff.y = b_CADA.y + b_CADA.h + 0.10;
-    p_stimonoff.h = 1 - p_stimonoff.y - 0.00;
-    
-    handles.uipanel_StimOnOff = uibuttongroup(handles.uipanel_Task,...
-        'Title','Stim ON / OFF',...
-        'TitlePosition','lefttop',...
-        'Units', 'Normalized',...
-        'Position',[p_stimonoff.x p_stimonoff.y p_stimonoff.w p_stimonoff.h],...
-        'BackgroundColor',figureBGcolor);
-    
-    
-    p_stimonoff.nbO    = 2; % Number of objects
-    p_stimonoff.Ow     = 1/(p_stimonoff.nbO + 1); % Object width
-    p_stimonoff.countO = 0; % Object counter
-    p_stimonoff.xposO  = @(countO) p_stimonoff.Ow/(p_stimonoff.nbO+1)*countO + (countO-1)*p_stimonoff.Ow;
-    
-    
-    % ---------------------------------------------------------------------
-    % RadioButton : Stim ON
-    
-    p_stimonoff.countO = p_stimonoff.countO + 1;
-    r_stimon.x   = p_stimonoff.xposO(p_stimonoff.countO);
-    r_stimon.y   = 0.1;
-    r_stimon.w   = p_stimonoff.Ow;
-    r_stimon.h   = 0.8;
-    r_stimon.tag = 'radiobutton_StimON';
-    handles.(r_stimon.tag) = uicontrol(handles.uipanel_StimOnOff,...
-        'Style','radiobutton',...
-        'Units', 'Normalized',...
-        'Position',[r_stimon.x r_stimon.y r_stimon.w r_stimon.h],...
-        'String','ON',...
-        'HorizontalAlignment','Center',...
-        'Tag',r_stimon.tag,...
-        'BackgroundColor',figureBGcolor,...
-        'Tooltip','');
-    
-    
-    % ---------------------------------------------------------------------
-    % RadioButton : Stim OFF
-    
-    p_stimonoff.countO = p_stimonoff.countO + 1;
-    r_stimoff.x   = p_stimonoff.xposO(p_stimonoff.countO);
-    r_stimoff.y   = r_stimon.y;
-    r_stimoff.w   = p_stimonoff.Ow;
-    r_stimoff.h   = r_stimon.h;
-    r_stimoff.tag = 'radiobutton_StimOFF';
-    handles.(r_stimoff.tag) = uicontrol(handles.uipanel_StimOnOff,...
-        'Style','radiobutton',...
-        'Units', 'Normalized',...
-        'Position',[r_stimoff.x r_stimoff.y r_stimoff.w r_stimoff.h],...
-        'String','OFF',...
-        'HorizontalAlignment','Center',...
-        'Tag',r_stimoff.tag,...
-        'BackgroundColor',figureBGcolor);
+    for i = 1 : length(p_task.vect)
+        
+        p_task.count  = p_task.count + 1;
+        b_CADA.x   = p_task.xpos  (p_task.count);
+        b_CADA.w   = p_task.xwidth(p_task.count);
+        b_CADA.y   = 0.25;
+        b_CADA.h   = 0.50;
+        b_CADA.tag = sprintf('pushbutton_CADA_%d',list_num(p_task.count));
+        handles.(b_CADA.tag) = uicontrol(handles.uipanel_Task       ,...
+            'Style'          , 'pushbutton'                         ,...
+            'Units'          , 'Normalized'                         ,...
+            'Position'       , [b_CADA.x b_CADA.y b_CADA.w b_CADA.h],...
+            'String'         , num2str(list_num(p_task.count))      ,...
+            'BackgroundColor', buttonBGcolor                        ,...
+            'Tag'            , b_CADA.tag                           ,...
+            'Callback'       , @main_BIOMRI_CADA                    );
+        
+    end
     
     
     %% Panel : Operation mode
