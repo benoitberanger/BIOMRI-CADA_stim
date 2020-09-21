@@ -24,8 +24,8 @@ RR.AddStartTime( 'StartTime' , 0 );
 KbName('UnifyKeyNames');
 
 KL = KbLogger( ...
-    struct2array(S.Parameters.Keybinds) ,...
-    KbName(struct2array(S.Parameters.Keybinds)) );
+    [ struct2array(S.Parameters.Keybinds) S.Parameters.Fingers.All ] ,...
+    [ KbName(struct2array(S.Parameters.Keybinds)) S.Parameters.Fingers.Names ] );
 
 % Start recording events
 KL.Start;

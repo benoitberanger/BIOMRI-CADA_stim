@@ -28,6 +28,7 @@ try
     
     CROSS        = CADA.Prepare.Cross;
     CHECKERBOARD = CADA.Prepare.Checkerboard;
+    AUDIOCLICK   = CADA.Prepare.AudioFile;
     
     
     %% Eyelink
@@ -109,7 +110,7 @@ try
                 ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime      [] []                });
                 
-                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack - dt;
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack - dt*2;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 secs = conditionFlipOnset;
                 while secs < when
@@ -142,7 +143,8 @@ try
                 
             case 'AskClick'
                 
-                lastFlipOnset = GetSecs;
+                when = StartTime + EP.Data{evt,2} - S.PTB.slack;
+                lastFlipOnset = AUDIOCLICK.Playback(when);
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []                });
@@ -187,7 +189,7 @@ try
     %% End of stimulation
     
     % Close the audio device
-    % PsychPortAudio('Close');
+    PsychPortAudio('Close');
     
     TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
     

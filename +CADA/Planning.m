@@ -9,7 +9,7 @@ end
 
 %% Paradigme
 
-Parameters.ToTalTime = 300 ; % second
+
 
 switch stim_duration
     case 2
@@ -31,13 +31,15 @@ end
 
 switch S.OperationMode
     case 'Acquisition'
-        % pass
+        Parameters.ToTalTime = 300 ; % second
     case 'FastDebug'
-        Parameters.StimDuration = 1; % second
-        Parameters.RestDuration = 2; % second
+        Parameters.ToTalTime = 30 ; % second
+        Parameters.StimDuration = 2; % second
+        Parameters.RestDuration = 5; % second
     case 'RealisticDebug'
-        Parameters.StimDuration = 1; % second
-        Parameters.RestDuration = 4; % second
+        Parameters.ToTalTime = 30 ; % second
+        Parameters.StimDuration = 2; % second
+        Parameters.RestDuration = 5; % second
 end
 
 % TimeVectRest =                       0 : Parameters.StimDuration + Parameters.RestDuration : Parameters.ToTalTime - Parameters.RestDuration;
@@ -46,7 +48,7 @@ nStim = length(TimeVectStim);
 
 Jitter   = Shuffle(                         0.5 + (1 : nStim) / nStim                             ); % Jitter = [0.5 ...  1.5];
 AskClick = Shuffle( Parameters.RestDuration/4   + (1 : nStim) / nStim * Parameters.RestDuration/2 ); % Jitter = [5   ... 10  ];
-Parameters.ClickAudioDuration = 1.4; % second
+Parameters.ClickAudioDuration = 1.4; % second => this is the lenght  of the .wav file
 
 
 %% Define a planning <--- paradigme

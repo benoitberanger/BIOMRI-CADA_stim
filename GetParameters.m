@@ -20,12 +20,12 @@ EchoStart(mfilename)
 %  Audio  %
 %%%%%%%%%%%
 
-% Parameters.Audio.SamplingRate            = 44100; % Hz
+Parameters.Audio.SamplingRate            = 44100; % Hz
 
-% Parameters.Audio.Playback_Mode           = 1; % 1 = playback, 2 = record
-% Parameters.Audio.Playback_LowLatencyMode = 1; % {0,1,2,3,4}
-% Parameters.Audio.Playback_freq           = Parameters.Audio.SamplingRate ;
-% Parameters.Audio.Playback_Channels       = 2; % 1 = mono, 2 = stereo
+Parameters.Audio.Playback_Mode           = 1; % 1 = playback, 2 = record
+Parameters.Audio.Playback_LowLatencyMode = 1; % {0,1,2,3,4}
+Parameters.Audio.Playback_freq           = Parameters.Audio.SamplingRate ;
+Parameters.Audio.Playback_Channels       = 2; % 1 = mono, 2 = stereo
 
 % Parameters.Audio.Record_Mode             = 2; % 1 = playback, 2 = record
 % Parameters.Audio.Record_LowLatencyMode   = 0; % {0,1,2,3,4}
@@ -72,6 +72,11 @@ KbName('UnifyKeyNames');
 Parameters.Keybinds.TTL_t_ASCII          = KbName('t'); % MRI trigger has to be the first defined key
 % Parameters.Keybinds.emulTTL_s_ASCII      = KbName('s');
 Parameters.Keybinds.Stop_Escape_ASCII    = KbName('ESCAPE');
+
+Parameters.Fingers.Right(1) = KbName('b'); % Thumb, not on the response buttons, arbitrary number
+
+Parameters.Fingers.All      = Parameters.Fingers.Right;
+Parameters.Fingers.Names    = {'Click'};
 
 
 %% Echo in command window
