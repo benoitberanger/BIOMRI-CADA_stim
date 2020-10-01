@@ -118,8 +118,8 @@ PTB.newLevel         = Priority( PTB.maxPriorityLevel );
 
 %% Warm up
 
-% PsychPortAudio('FillBuffer',PTB.Playback_pahandle,zeros(2,1e3));
-% PsychPortAudio('Start',PTB.Playback_pahandle,[],[],1);
+PsychPortAudio('FillBuffer',PTB.Playback_pahandle,zeros(2,1e3));
+PsychPortAudio('Start',PTB.Playback_pahandle,[],[],1);
 
 Screen('Flip',PTB.wPtr);
 WaitSecs(0.100);
