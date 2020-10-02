@@ -1,4 +1,4 @@
-function [ TaskData ] = Task
+function [ TaskData ] = Task( stim_duration )
 global S
 
 S.PTB.slack = 0.001;
@@ -6,7 +6,7 @@ S.PTB.slack = 0.001;
 try
     %% Tunning of the task
     
-    [ EP, Parameters ] = CADA.Planning;
+    [ EP, Parameters ] = CADA.Planning( stim_duration );
     TaskData.Parameters = Parameters;
     
     % End of preparations
@@ -21,13 +21,15 @@ try
     % This is a pointer copy, not a deep copy
     S.EP = EP;
     S.ER = ER;
-    S.RR = KL;
+    S.RR = RR;
+    S.KL = KL;
     
     
     %% Prepare objects
     
     CROSS        = CADA.Prepare.Cross;
     CHECKERBOARD = CADA.Prepare.Checkerboard;
+    AUDIOCLICK   = CADA.Prepare.AudioFile;
     
     
     %% Eyelink
@@ -101,15 +103,6 @@ try
                 Screen('DrawingFinished', S.PTB.wPtr);
                 conditionFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 
-                % Send stim
-                if strcmp(S.StimONOFF,'ON')
-                    switch EP.Data{evt,1}
-                        case 'Stim'
-                            S.FTDI.Start(1);
-                            fprintf('Started Stim   channel=1 stimulation \n')
-                    end
-                end
-                
                 CHECKERBOARD.DrawFlic
                 Screen('DrawingFinished', S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr);
@@ -118,7 +111,7 @@ try
                 ER.AddEvent({EP.Data{evt,1} conditionFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime      [] []                });
                 
-                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack - dt;
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack - dt*2;
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 secs = conditionFlipOnset;
                 while secs < when
@@ -148,14 +141,36 @@ try
                 end
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
-                % Stop stim
-                if strcmp(S.StimONOFF,'ON')
-                    switch EP.Data{evt,1}
-                        case 'Stim'
-                            S.FTDI.Stop(1);
-                            fprintf('Stopped Stim   channel=1 stimulation \n')
+                
+            case 'AskClick'
+                
+                when = StartTime + EP.Data{evt,2} - S.PTB.slack;
+                lastFlipOnset = AUDIOCLICK.Playback(when);
+                Common.SendParPortMessage(EP.Data{evt,1});
+                ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
+                RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []                });
+                
+                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                secs = lastFlipOnset;
+                while secs < when
+                    
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
                     end
+                    
+                end % while
+                if EXIT
+                    break
                 end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
             otherwise % ---------------------------------------------------
@@ -175,7 +190,7 @@ try
     %% End of stimulation
     
     % Close the audio device
-    % PsychPortAudio('Close');
+    PsychPortAudio('Close');
     
     TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
     

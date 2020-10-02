@@ -9,17 +9,17 @@ try
     %% Preparation
     
     % 'names' for SPM
-    switch S.Task
+    if strfind(S.Task,'CADA')
         
-        case 'CADA'
-            names = {
-                'Rest'
-                'Stim'
-                };
-            
-        case 'EyelinkCalibration'
-            names = {};
-            
+        names = {
+            'Rest'
+            'Stim'
+            'AskClick'
+            };
+        
+    elseif strfind(S.Task,'EyelinkCalibration')
+        names = {};
+        
     end
     
     % 'onsets' & 'durations' for SPM
@@ -40,6 +40,8 @@ try
                 onsets{1} = [onsets{1} ; EventData{event,2}];
             case 'Stim'
                 onsets{2} = [onsets{2} ; EventData{event,2}];
+            case 'AskClick'
+                onsets{3} = [onsets{3} ; EventData{event,2}];
                 
         end
         
@@ -57,49 +59,51 @@ try
                 durations{1} = [ durations{1} ; EventData{event+1,2}-EventData{event,2}] ;
             case 'Stim'
                 durations{2} = [ durations{2} ; EventData{event+1,2}-EventData{event,2}] ;
+            case 'AskClick'
+                durations{3} = [ durations{3} ; EventData{event+1,2}-EventData{event,2}] ;
         end
         
     end
     
     
-    %     %% Add Clicks to SPM model input
-    %
-    %     if ~strcmp(S.Task,'EyelinkCalibration')
-    %
-    %         N = length(names);
-    %
-    %         fingers = S.Parameters.Fingers.Names;
-    %
-    %         for f = 1:length(fingers)
-    %             click_spot.(fingers{f}) = regexp(S.TaskData.KL.KbEvents(:,1),fingers{f});
-    %             click_spot.(fingers{f}) = ~cellfun(@isempty,click_spot.(fingers{f}));
-    %             click_spot.(fingers{f}) = find(click_spot.(fingers{f}));
-    %         end
-    %
-    %         count = 0 ;
-    %         for f = 1:length(fingers)
-    %
-    %             count = count + 1 ;
-    %
-    %             names{N+count} = fingers{f};
-    %
-    %             if ~isempty(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2})
-    %                 click_idx = cell2mat(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}(:,2)) == 1;
-    %                 click_idx = find(click_idx);
-    %                 % the last clickk can be be unfinished : button down + end of stim = no button up
-    %                 if isempty(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}{click_idx(end),3})
-    %                     S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}{click_idx(end),3} =  S.TaskData.ER.Data{end,2} - S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}{click_idx(end),1};
-    %                 end
-    %                 onsets{N+count}    = cell2mat(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}(click_idx,1));
-    %                 durations{N+count} = cell2mat(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}(click_idx,3));
-    %             else
-    %                 onsets{N+count}    = [];
-    %                 durations{N+count} = [];
-    %             end
-    %
-    %         end
-    %
-    %     end
+    %% Add Clicks to SPM model input
+    
+    if ~strcmp(S.Task,'EyelinkCalibration')
+        
+        N = length(names);
+        
+        fingers = S.Parameters.Fingers.Names;
+        
+        for f = 1:length(fingers)
+            click_spot.(fingers{f}) = regexp(S.TaskData.KL.KbEvents(:,1),fingers{f});
+            click_spot.(fingers{f}) = ~cellfun(@isempty,click_spot.(fingers{f}));
+            click_spot.(fingers{f}) = find(click_spot.(fingers{f}));
+        end
+        
+        count = 0 ;
+        for f = 1:length(fingers)
+            
+            count = count + 1 ;
+            
+            names{N+count} = fingers{f};
+            
+            if ~isempty(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2})
+                click_idx = cell2mat(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}(:,2)) == 1;
+                click_idx = find(click_idx);
+                % the last clickk can be be unfinished : button down + end of stim = no button up
+                if isempty(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}{click_idx(end),3})
+                    S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}{click_idx(end),3} =  S.TaskData.ER.Data{end,2} - S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}{click_idx(end),1};
+                end
+                onsets{N+count}    = cell2mat(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}(click_idx,1));
+                durations{N+count} = cell2mat(S.TaskData.KL.KbEvents{click_spot.(fingers{f}),2}(click_idx,3));
+            else
+                onsets{N+count}    = [];
+                durations{N+count} = [];
+            end
+            
+        end
+        
+    end
     
     
 catch err

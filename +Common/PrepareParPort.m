@@ -19,10 +19,10 @@ end
 
 %% Prepare messages
 
-
 % fill here...
-msg.Rest = 1;
-msg.Stim = 2;
+msg.Rest     = 1;
+msg.Stim     = 2;
+msg.AskClick = 3;
 
 
 %% Finalize
