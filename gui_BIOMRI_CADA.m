@@ -60,7 +60,7 @@ else % Create the figure
     
     panelProp.interWidth = 0.01;
     panelProp.vect  = ...
-        [0.75 2 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
+        [0.75 1 1 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
     
     panelProp.vectLength    = length(panelProp.vect);
     panelProp.vectTotal     = sum(panelProp.vect);
@@ -483,22 +483,41 @@ else % Create the figure
     
     
     %% Panel : Task
-    
-    panelProp.countP = panelProp.countP - 1;
+    % 1 => not sinc with TR
+    % 2 =>  in sync with TR
     
     p_task.x = panelProp.xposP;
     p_task.w = panelProp.wP ;
     
+    %----------------------------------------------------------------------
+    % 1 => not sinc with TR
+    
+    panelProp.countP = panelProp.countP - 1;
     p_task.y = panelProp.yposP(panelProp.countP);
     p_task.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
     
-    handles.uipanel_Task = uibuttongroup(handles.(mfilename),...
-        'Title','Task',...
+    handles.uipanel_Task_noSync = uibuttongroup(handles.(mfilename),...
+        'Title','Task : noSync',...
         'Units', 'Normalized',...
         'Position',[p_task.x p_task.y p_task.w p_task.h],...
         'BackgroundColor',figureBGcolor);
     
-    list_num = [2 3 5 10];
+    %----------------------------------------------------------------------
+    % 2 =>  in sync with TR
+    
+    panelProp.countP = panelProp.countP - 1;
+    p_task.y = panelProp.yposP(panelProp.countP);
+    p_task.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
+    
+    handles.uipanel_Task_inSync = uibuttongroup(handles.(mfilename),...
+        'Title','Task : inSync',...
+        'Units', 'Normalized',...
+        'Position',[p_task.x p_task.y p_task.w p_task.h],...
+        'BackgroundColor',figureBGcolor);
+    
+    
+    
+    list_num = [1 2 3 5 10];
     p_task = Object_Xpos_Xwidth_dispatcher( p_task, ones(1,length(list_num)) , 0.05 );
     
     % ---------------------------------------------------------------------
@@ -509,10 +528,20 @@ else % Create the figure
         p_task.count  = p_task.count + 1;
         b_CADA.x   = p_task.xpos  (p_task.count);
         b_CADA.w   = p_task.xwidth(p_task.count);
-        b_CADA.y   = 0.25;
+        b_CADA.y   = 0.10;
         b_CADA.h   = 0.50;
-        b_CADA.tag = sprintf('pushbutton_CADA_%d',list_num(p_task.count));
-        handles.(b_CADA.tag) = uicontrol(handles.uipanel_Task       ,...
+        b_CADA.tag = sprintf('pushbutton_CADA_noSync_%d',list_num(p_task.count));
+        handles.(b_CADA.tag) = uicontrol(handles.uipanel_Task_noSync,...
+            'Style'          , 'pushbutton'                         ,...
+            'Units'          , 'Normalized'                         ,...
+            'Position'       , [b_CADA.x b_CADA.y b_CADA.w b_CADA.h],...
+            'String'         , num2str(list_num(p_task.count))      ,...
+            'BackgroundColor', buttonBGcolor                        ,...
+            'Tag'            , b_CADA.tag                           ,...
+            'Callback'       , @main_BIOMRI_CADA                    );
+        
+        b_CADA.tag = sprintf('pushbutton_CADA_inSync_%d',list_num(p_task.count));
+        handles.(b_CADA.tag) = uicontrol(handles.uipanel_Task_inSync,...
             'Style'          , 'pushbutton'                         ,...
             'Units'          , 'Normalized'                         ,...
             'Position'       , [b_CADA.x b_CADA.y b_CADA.w b_CADA.h],...
@@ -522,6 +551,19 @@ else % Create the figure
             'Callback'       , @main_BIOMRI_CADA                    );
         
     end
+    
+    e_TR.x = p_task.xpos(1);
+    e_TR.w = p_task.xpos( length(p_task.vect) ) + p_task.xwidth( length(p_task.vect) ) - p_task.interWidth;
+    e_TR.y = b_CADA.y + b_CADA.h;
+    e_TR.h = 0.40;
+    handles.edit_TR = uicontrol(handles.uipanel_Task_inSync,...
+        'Style','edit',...
+        'Units', 'Normalized',...
+        'Position',[e_TR.x e_TR.y e_TR.w e_TR.h],...
+        'BackgroundColor',editBGcolor,...
+        'String','250',...
+        'Tooltipstring','TR in ms',...
+        'Callback',@edit_TR_Callback);
     
     
     %% Panel : Operation mode
@@ -746,4 +788,15 @@ if isempty(SubjectID)
     error('SubjectID:Empty','SubjectID is empty')
 end
 
-end
+end % function
+
+% -------------------------------------------------------------------------
+function edit_TR_Callback(hObject, ~)
+
+TR = str2double(  get(hObject,'String') );
+
+assert(TR < 1000, 'TR < 1000ms mandatory');
+
+fprintf('TR is OK : %dms \n', TR)
+
+end % function

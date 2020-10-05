@@ -35,17 +35,39 @@ S.TimeStampFile = datestr(now, 30                ); % to sort automatically by t
 
 switch get(hObject,'Tag')
     
-    case 'pushbutton_CADA_2'
-        Task = 'CADA_2';
+    case 'pushbutton_CADA_noSync_1'
+        Task = 'CADA_noSync_1';
+    
+    case 'pushbutton_CADA_noSync_2'
+        Task = 'CADA_noSync_2';
         
-    case 'pushbutton_CADA_3'
-        Task = 'CADA_3';
+    case 'pushbutton_CADA_noSync_3'
+        Task = 'CADA_noSync_3';
         
-    case 'pushbutton_CADA_5'
-        Task = 'CADA_5';
+    case 'pushbutton_CADA_noSync_5'
+        Task = 'CADA_noSync_5';
         
-    case 'pushbutton_CADA_10'
-        Task = 'CADA_10';
+    case 'pushbutton_CADA_noSync_10'
+        Task = 'CADA_noSync_10';
+        
+        
+        
+    case 'pushbutton_CADA_inSync_1'
+        Task = 'CADA_inSync_1';
+        
+    case 'pushbutton_CADA_inSync_2'
+        Task = 'CADA_inSync_2';
+        
+    case 'pushbutton_CADA_inSync_3'
+        Task = 'CADA_inSync_3';
+        
+    case 'pushbutton_CADA_inSync_5'
+        Task = 'CADA_inSync_5';
+        
+    case 'pushbutton_CADA_inSync_10'
+        Task = 'CADA_inSync_10';
+        
+        
         
     case 'pushbutton_EyelinkCalibration'
         Task = 'EyelinkCalibration';
@@ -268,19 +290,44 @@ S.PTB = StartPTB;
 
 EchoStart(Task)
 
+TR = str2double( get(handles.edit_TR,'String') );
+S.TR = TR;
+
 switch Task
     
-    case 'CADA_2'
-        TaskData = CADA.Task(2);
+    case 'CADA_noSync_1'
+        TaskData = CADA.Task(1,[]);
+    
+    case 'CADA_noSync_2'
+        TaskData = CADA.Task(2,[]);
         
-    case 'CADA_3'
-        TaskData = CADA.Task(3);
+    case 'CADA_noSync_3'
+        TaskData = CADA.Task(3,[]);
         
-    case 'CADA_5'
-        TaskData = CADA.Task(5);
+    case 'CADA_noSync_5'
+        TaskData = CADA.Task(5,[]);
         
-    case 'CADA_10'
-        TaskData = CADA.Task(10);
+    case 'CADA_noSync_10'
+        TaskData = CADA.Task(10,[]);
+        
+        
+        
+    case 'CADA_inSync_1'
+        TaskData = CADA.Task(1,TR);
+        
+    case 'CADA_inSync_2'
+        TaskData = CADA.Task(2,TR);
+        
+    case 'CADA_inSync_3'
+        TaskData = CADA.Task(3,TR);
+        
+    case 'CADA_inSync_5'
+        TaskData = CADA.Task(5,TR);
+        
+    case 'CADA_inSync_10'
+        TaskData = CADA.Task(10,TR);
+        
+        
         
     case 'EyelinkCalibration'
         Eyelink.Calibration(S.PTB.wPtr);

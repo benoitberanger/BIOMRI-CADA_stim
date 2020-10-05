@@ -24,11 +24,19 @@ KL.Stop;
 switch S.OperationMode
     case 'Acquisition'
     case 'FastDebug'
-        TR = 1.600; % seconds
+        if isempty(TaskData.Parameters.TR)
+            TR = 0.300;
+        else
+            TR = TaskData.Parameters.TR;
+        end
         nbVolumes = ceil( EP.Data{end,2} / TR ) ; % nb of volumes for the estimated time of stimulation
         KL.GenerateMRITrigger( TR , nbVolumes + 2 , StartTime );
     case 'RealisticDebug'
-        TR = 1.600; % seconds
+        if isempty(TaskData.Parameters.TR)
+            TR = 0.300;
+        else
+            TR = TaskData.Parameters.TR;
+        end
         nbVolumes = ceil( EP.Data{end,2} / TR ); % nb of volumes for the estimated time of stimulation
         KL.GenerateMRITrigger( TR , nbVolumes + 2, StartTime );
     otherwise

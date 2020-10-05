@@ -1,4 +1,4 @@
-function [ TaskData ] = Task( stim_duration )
+function [ TaskData ] = Task( stim_duration, TR )
 global S
 
 S.PTB.slack = 0.001;
@@ -6,7 +6,7 @@ S.PTB.slack = 0.001;
 try
     %% Tunning of the task
     
-    [ EP, Parameters ] = CADA.Planning( stim_duration );
+    [ EP, Parameters ] = CADA.Planning( stim_duration, TR );
     TaskData.Parameters = Parameters;
     
     % End of preparations
