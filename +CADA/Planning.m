@@ -3,8 +3,8 @@ global S
 
 if nargout < 1 % only to plot the paradigme when we execute the function outside of the main script
     S.OperationMode = 'Acquisition';
-    stim_duration   = 1;   % second
-    TR              = []; % millisecond, or []
+    stim_duration   = 2;   % second
+    TR              = 250; % millisecond, or []
 end
 
 TR = TR / 1000; % ms -> s
@@ -12,8 +12,6 @@ Parameters.TR = TR;
 
 
 %% Paradigme
-
-
 
 switch stim_duration
     case 1
@@ -44,12 +42,12 @@ switch S.OperationMode
         Parameters.ToTalTime          = 30 ;  % second
         Parameters.StimDuration       = 1;    % second
         Parameters.RestDuration       = 5;    % second
-        Parameters.ClickAudioDuration = 1.0;  % second
+        Parameters.ClickAudioDuration = 0.5;  % second
     case 'RealisticDebug'
         Parameters.ToTalTime          = 30 ;  % second
         Parameters.StimDuration       = 2;    % second
         Parameters.RestDuration       = 5;    % second
-        Parameters.ClickAudioDuration = 1.0;  % second
+        Parameters.ClickAudioDuration = 0.5;  % second
 end
 
 if isempty(TR)
@@ -63,10 +61,17 @@ if isempty(TR)
     
 else
     
-    dtR = mod( Parameters.StimDuration , TR );
+    div = Parameters.StimDuration / TR;
+    up  = ceil(div);
+    rem = up-div;
+    dtR = rem * TR;
     dtL = TR - dtR;
     
-    SyncRestDuration = Parameters.RestDuration - dtL;
+    if mod(Parameters.StimDuration+Parameters.RestDuration,TR) ~= 0
+        SyncRestDuration = Parameters.RestDuration - dtL;
+    else
+        SyncRestDuration = Parameters.RestDuration;
+    end
     Parameters.SyncRestDuration = SyncRestDuration;
     
     TimeVectStim = SyncRestDuration : Parameters.StimDuration + SyncRestDuration : Parameters.ToTalTime - SyncRestDuration - Parameters.StimDuration;
@@ -110,7 +115,7 @@ if isempty(TR)
     
 else
     
-    EP.AddPlanning({ 'Rest' NextOnset(EP) SyncRestDuration })
+    EP.AddPlanning({ 'Rest' NextOnset(EP) round(Parameters.RestDuration/TR) * TR }) % first rest block has to be a N x TR
     
     for evt = 1 : nStim
         
@@ -121,6 +126,16 @@ else
         
     end
     
+    Stim_idx   = strcmp( EP.Data(:,1), 'Stim' );
+    Stim_onset = cell2mat(  EP.Data(Stim_idx,2) );
+    REM        = mod(Stim_onset,TR);
+    REM( REM < 0.001 ) = 0; % I don't know why, but the Shuffle (higher in the code) can non-zero values, such as 5.1292e-14.
+    IsInSync   =  REM == 0;
+    if ~all(IsInSync)
+        error('not in sync with TR')
+        % warning('not in sync with TR')
+        % keyboard
+    end
 end
 
 % --- Stop ----------------------------------------------------------------
