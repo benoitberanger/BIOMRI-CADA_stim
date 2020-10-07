@@ -18,7 +18,7 @@ Parameters.TR = TR;
 switch stim_duration
     case 1
         Parameters.StimDuration =  1; % second
-        Parameters.RestDuration = 20; % second
+        Parameters.RestDuration = 30; % second
     case 2
         Parameters.StimDuration =  2; % second
         Parameters.RestDuration = 30; % second
