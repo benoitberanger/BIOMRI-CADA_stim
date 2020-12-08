@@ -29,7 +29,11 @@ try
     
     CROSS        = CADA.Prepare.Cross;
     CHECKERBOARD = CADA.Prepare.Checkerboard;
-    AUDIOCLICK   = CADA.Prepare.AudioFile;
+    switch S.AudioMode
+        case 'On'
+            AUDIOCLICK = CADA.Prepare.AudioFile;
+        case 'Off'
+    end
     
     
     %% Eyelink
@@ -145,7 +149,13 @@ try
             case 'AskClick'
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
-                lastFlipOnset = AUDIOCLICK.Playback(when);
+                switch S.AudioMode
+                    case 'On'
+                        lastFlipOnset = AUDIOCLICK.Playback(when);
+                    case 'Off'
+                        lastFlipOnset = WaitSecs('UntilTime',when);
+                end
+                
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []                });

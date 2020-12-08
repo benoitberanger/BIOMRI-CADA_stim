@@ -93,6 +93,20 @@ end
 S.SaveMode = SaveMode;
 
 
+%% GUI : Audio on/off
+
+switch get(get(handles.uipanel_AudioMode,'SelectedObject'),'Tag')
+    case 'radiobutton_AudioON'
+        AudioMode = 'On';
+    case 'radiobutton_AudioOFF'
+        AudioMode = 'Off';
+    otherwise
+        warning('BIOMRI_CADA:AudioSelection','Error in AudioMode selection')
+end
+
+S.AudioMode = AudioMode;
+
+
 %% GUI : Mode selection
 
 switch get(get(handles.uipanel_OperationMode,'SelectedObject'),'Tag')

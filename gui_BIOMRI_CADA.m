@@ -60,7 +60,7 @@ else % Create the figure
     
     panelProp.interWidth = 0.01;
     panelProp.vect  = ...
-        [0.75 1 1 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
+        [0.75 0.75 1 1 1 0.75 1.5 ]; % relative proportions of each panel, from bottom to top
     
     panelProp.vectLength    = length(panelProp.vect);
     panelProp.vectTotal     = sum(panelProp.vect);
@@ -564,6 +564,65 @@ else % Create the figure
         'String','250',...
         'Tooltipstring','TR in ms',...
         'Callback',@edit_TR_Callback);
+    
+    
+    %% Panel : Audio on/off
+    
+    p_audio.x = panelProp.xposP;
+    p_audio.w = panelProp.wP;
+    
+    panelProp.countP = panelProp.countP - 1;
+    p_audio.y = panelProp.yposP(panelProp.countP);
+    p_audio.h = panelProp.unitWidth*panelProp.vect(panelProp.countP);
+    
+    handles.uipanel_AudioMode = uibuttongroup(handles.(mfilename),...
+        'Title','Audio',...
+        'Units', 'Normalized',...
+        'Position',[p_audio.x p_audio.y p_audio.w p_audio.h],...
+        'BackgroundColor',figureBGcolor);
+    
+    p_audio.nbO    = 2; % Number of objects
+    p_audio.Ow     = 1/(p_audio.nbO + 1); % Object width
+    p_audio.countO = 0; % Object counter
+    p_audio.xposO  = @(countO) p_audio.Ow/(p_audio.nbO+1)*countO + (countO-1)*p_audio.Ow;
+    
+    
+    % ---------------------------------------------------------------------
+    % RadioButton : Audio ON
+    
+    p_audio.countO = p_audio.countO + 1;
+    r_audioON.x   = p_audio.xposO(p_audio.countO);
+    r_audioON.y   = 0.1 ;
+    r_audioON.w   = p_audio.Ow;
+    r_audioON.h   = 0.8;
+    r_audioON.tag = 'radiobutton_AudioON';
+    handles.(r_audioON.tag) = uicontrol(handles.uipanel_AudioMode,...
+        'Style','radiobutton',...
+        'Units', 'Normalized',...
+        'Position',[r_audioON.x r_audioON.y r_audioON.w r_audioON.h],...
+        'String','On',...
+        'HorizontalAlignment','Center',...
+        'Tag',r_audioON.tag,...
+        'BackgroundColor',figureBGcolor);
+    
+    
+    % ---------------------------------------------------------------------
+    % RadioButton : Audio OFF
+    
+    p_audio.countO = p_audio.countO + 1;
+    r_audioOFF.x   = p_audio.xposO(p_audio.countO);
+    r_audioOFF.y   = 0.1 ;
+    r_audioOFF.w   = p_audio.Ow;
+    r_audioOFF.h   = 0.8;
+    r_audioOFF.tag = 'radiobutton_AudioOFF';
+    handles.(r_audioOFF.tag) = uicontrol(handles.uipanel_AudioMode,...
+        'Style','radiobutton',...
+        'Units', 'Normalized',...
+        'Position',[r_audioOFF.x r_audioOFF.y r_audioOFF.w r_audioOFF.h],...
+        'String','Off',...
+        'HorizontalAlignment','Center',...
+        'Tag',r_audioOFF.tag,...
+        'BackgroundColor',figureBGcolor);
     
     
     %% Panel : Operation mode
