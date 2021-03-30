@@ -199,8 +199,12 @@ try
     
     %% End of stimulation
     
-    % Close the audio device
-    PsychPortAudio('Close');
+    switch S.AudioMode
+        case 'On'
+            % Close the audio device
+            PsychPortAudio('Close');
+        case 'Off'
+    end
     
     TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
     

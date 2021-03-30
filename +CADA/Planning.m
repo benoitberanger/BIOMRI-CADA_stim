@@ -16,19 +16,19 @@ Parameters.TR = TR;
 switch stim_duration
     case 1
         Parameters.StimDuration =  1; % second
-        Parameters.RestDuration = 45; % second
+        Parameters.RestDuration = 30; % second
     case 2
         Parameters.StimDuration =  2; % second
-        Parameters.RestDuration = 45; % second
+        Parameters.RestDuration = 30; % second
     case 3
         Parameters.StimDuration =  3; % second
-        Parameters.RestDuration = 55; % second
+        Parameters.RestDuration = 30; % second
     case 5
         Parameters.StimDuration =  5; % second
-        Parameters.RestDuration = 55; % second
+        Parameters.RestDuration = 30; % second
     case 10
         Parameters.StimDuration = 10; % second
-        Parameters.RestDuration = 55; % second
+        Parameters.RestDuration = 30; % second
     otherwise
         error('wrong stim_duration')
 end
