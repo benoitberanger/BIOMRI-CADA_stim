@@ -59,8 +59,8 @@ Parameters.Cross.Color           = [128 128 128]; % [R G B] ( from 0 to 255 )
 % Checkerboard
 Parameters.Checkerboard.Frequency     = 6;             % Hz
 Parameters.Checkerboard.nSquareWidth  = 8;            %
-Parameters.Checkerboard.FlicColor     = [255 255 255]; % [R G B] ( from 0 to 255 )
-Parameters.Checkerboard.FlacColor     = [255 255 255]; % [R G B] ( from 0 to 255 )
+Parameters.Checkerboard.FlicColor     = [128 128 128]; % [R G B] ( from 0 to 255 )
+Parameters.Checkerboard.FlacColor     = [128 128 128]; % [R G B] ( from 0 to 255 )
 
 
 %%%%%%%%%%%%%%

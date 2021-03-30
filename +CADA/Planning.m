@@ -19,7 +19,7 @@ switch stim_duration
         Parameters.RestDuration = 30; % second
     case 2
         Parameters.StimDuration =  2; % second
-        Parameters.RestDuration = 30; % second
+        Parameters.RestDuration = 25; % second
     case 3
         Parameters.StimDuration =  3; % second
         Parameters.RestDuration = 30; % second
