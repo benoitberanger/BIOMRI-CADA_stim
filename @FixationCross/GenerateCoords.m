@@ -1,7 +1,7 @@
 function GenerateCoords( self )
 
-hRect = CenterRectOnPoint([0 0 self.dim   self.width],self.center(1),self.center(2));
-vRect = CenterRectOnPoint([0 0 self.width self.dim  ],self.center(1),self.center(2));
+hRect = CenterRectOnPoint([0 0 self.currentDim   self.currentWidth],self.center(1),self.center(2));
+vRect = CenterRectOnPoint([0 0 self.currentWidth self.currentDim  ],self.center(1),self.center(2));
 
 self.allCoords = [hRect; vRect]';
 

@@ -29,12 +29,7 @@ try
     
     CROSS        = CADA.Prepare.Cross;
     CHECKERBOARD = CADA.Prepare.Checkerboard;
-    switch S.AudioMode
-        case 'On'
-            AUDIOCLICK = CADA.Prepare.AudioFile;
-        case 'Off'
-    end
-    
+
     
     %% Eyelink
     
@@ -146,41 +141,44 @@ try
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
-            case 'AskClick'
+            case 'Control'
+                
+                factor = 1.3;
+                
+                transit_duration = EP.Data{evt,3};
+                half_transit_duration = transit_duration/2;
+                nFrames         = round(transit_duration/S.PTB.IFI);
+                nFrames_plateau = round(half_transit_duration/S.PTB.IFI);
+                nFrames_rise    = round(half_transit_duration/2/S.PTB.IFI);
+                
+                color_steps  = linspace(128,0,nFrames_rise);
+                factor_steps = linspace(1,factor,nFrames_rise);
                 
                 when = StartTime + EP.Data{evt,2} - S.PTB.slack;
-                switch S.AudioMode
-                    case 'On'
-                        lastFlipOnset = AUDIOCLICK.Playback(when);
-                    case 'Off'
-                        lastFlipOnset = WaitSecs('UntilTime',when);
-                end
-                
+                CROSS.Draw();
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []                });
-                
-                when = StartTime + EP.Data{evt+1,2} - S.PTB.slack;
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                secs = lastFlipOnset;
-                while secs < when
-                    
-                    % Fetch keys
-                    [keyIsDown, secs, keyCode] = KbCheck;
-                    
-                    if keyIsDown
-                        % ~~~ ESCAPE key ? ~~~
-                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
-                        if EXIT
-                            break
-                        end
-                    end
-                    
-                end % while
-                if EXIT
-                    break
+                                
+                for i = 1 : nFrames_rise
+                    CROSS.currentColor = [128 color_steps(i) color_steps(i)];
+                    CROSS.Rescale(factor_steps(i));
+                    CROSS.Draw();
+                    Screen('Flip',S.PTB.wPtr);
                 end
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                for i = 1 : nFrames_plateau
+                    CROSS.Draw();
+                    Screen('Flip',S.PTB.wPtr);
+                end
+                color_steps  = fliplr( color_steps);
+                factor_steps = fliplr(factor_steps);
+                for i = 1 : nFrames_rise
+                    CROSS.currentColor = [128 color_steps(i) color_steps(i)];
+                    CROSS.Rescale(factor_steps(i));
+                    CROSS.Draw();
+                    Screen('Flip',S.PTB.wPtr);
+                end
                 
                 
             otherwise % ---------------------------------------------------
@@ -198,13 +196,6 @@ try
     
     
     %% End of stimulation
-    
-    switch S.AudioMode
-        case 'On'
-            % Close the audio device
-            PsychPortAudio('Close');
-        case 'Off'
-    end
     
     TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
     

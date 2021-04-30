@@ -35,39 +35,12 @@ S.TimeStampFile = datestr(now, 30                ); % to sort automatically by t
 
 switch get(hObject,'Tag')
     
-    case 'pushbutton_CADA_noSync_1'
-        Task = 'CADA_noSync_1';
-    
-    case 'pushbutton_CADA_noSync_2'
-        Task = 'CADA_noSync_2';
-        
-    case 'pushbutton_CADA_noSync_3'
-        Task = 'CADA_noSync_3';
-        
-    case 'pushbutton_CADA_noSync_5'
-        Task = 'CADA_noSync_5';
-        
-    case 'pushbutton_CADA_noSync_10'
-        Task = 'CADA_noSync_10';
-        
-        
-        
-    case 'pushbutton_CADA_inSync_1'
-        Task = 'CADA_inSync_1';
-        
     case 'pushbutton_CADA_inSync_2'
         Task = 'CADA_inSync_2';
         
-    case 'pushbutton_CADA_inSync_3'
-        Task = 'CADA_inSync_3';
-        
-    case 'pushbutton_CADA_inSync_5'
-        Task = 'CADA_inSync_5';
-        
     case 'pushbutton_CADA_inSync_10'
         Task = 'CADA_inSync_10';
-        
-        
+
         
     case 'pushbutton_EyelinkCalibration'
         Task = 'EyelinkCalibration';
@@ -91,20 +64,6 @@ switch get(get(handles.uipanel_SaveMode,'SelectedObject'),'Tag')
 end
 
 S.SaveMode = SaveMode;
-
-
-%% GUI : Audio on/off
-
-switch get(get(handles.uipanel_AudioMode,'SelectedObject'),'Tag')
-    case 'radiobutton_AudioON'
-        AudioMode = 'On';
-    case 'radiobutton_AudioOFF'
-        AudioMode = 'Off';
-    otherwise
-        warning('BIOMRI_CADA:AudioSelection','Error in AudioMode selection')
-end
-
-S.AudioMode = AudioMode;
 
 
 %% GUI : Mode selection
@@ -309,34 +268,8 @@ S.TR = TR;
 
 switch Task
     
-    case 'CADA_noSync_1'
-        TaskData = CADA.Task(1,[]);
-    
-    case 'CADA_noSync_2'
-        TaskData = CADA.Task(2,[]);
-        
-    case 'CADA_noSync_3'
-        TaskData = CADA.Task(3,[]);
-        
-    case 'CADA_noSync_5'
-        TaskData = CADA.Task(5,[]);
-        
-    case 'CADA_noSync_10'
-        TaskData = CADA.Task(10,[]);
-        
-        
-        
-    case 'CADA_inSync_1'
-        TaskData = CADA.Task(1,TR);
-        
     case 'CADA_inSync_2'
         TaskData = CADA.Task(2,TR);
-        
-    case 'CADA_inSync_3'
-        TaskData = CADA.Task(3,TR);
-        
-    case 'CADA_inSync_5'
-        TaskData = CADA.Task(5,TR);
         
     case 'CADA_inSync_10'
         TaskData = CADA.Task(10,TR);
