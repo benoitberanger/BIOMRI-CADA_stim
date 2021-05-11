@@ -29,7 +29,7 @@ try
     
     CROSS        = CADA.Prepare.Cross;
     CHECKERBOARD = CADA.Prepare.Checkerboard;
-
+    
     
     %% Eyelink
     
@@ -87,6 +87,9 @@ try
                         if EXIT
                             break
                         end
+                        if keyCode(S.Parameters.Fingers.Right)
+                            fprintf('>>> click <<< \n')
+                        end
                     end
                     
                 end % while
@@ -132,6 +135,9 @@ try
                         if EXIT
                             break
                         end
+                        if keyCode(S.Parameters.Fingers.Right)
+                            fprintf('>>> click <<< \n')
+                        end
                     end
                     
                 end % while
@@ -160,20 +166,29 @@ try
                 Common.SendParPortMessage(EP.Data{evt,1});
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] EP.Data{evt,4:end}});
                 RR.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime [] []                });
-                                
+                
                 for i = 1 : nFrames_rise
+                    if keyCode(S.Parameters.Fingers.Right)
+                        fprintf('>>> click <<< \n')
+                    end
                     CROSS.currentColor = [128 color_steps(i) color_steps(i)];
                     CROSS.Rescale(factor_steps(i));
                     CROSS.Draw();
                     Screen('Flip',S.PTB.wPtr);
                 end
                 for i = 1 : nFrames_plateau
+                    if keyCode(S.Parameters.Fingers.Right)
+                        fprintf('>>> click <<< \n')
+                    end
                     CROSS.Draw();
                     Screen('Flip',S.PTB.wPtr);
                 end
                 color_steps  = fliplr( color_steps);
                 factor_steps = fliplr(factor_steps);
                 for i = 1 : nFrames_rise
+                    if keyCode(S.Parameters.Fingers.Right)
+                        fprintf('>>> click <<< \n')
+                    end
                     CROSS.currentColor = [128 color_steps(i) color_steps(i)];
                     CROSS.Rescale(factor_steps(i));
                     CROSS.Draw();
