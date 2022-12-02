@@ -642,9 +642,12 @@ else % Create the figure
     
     fprintf('\n')
     fprintf('Response buttuns (fORRP 932) : \n')
+    fprintf('****************************** \n')
     fprintf('USB \n')
-    fprintf('TETHYX \n')
-    fprintf('HID JOYSTICK \n')
+    fprintf('2x1 CYL \n')
+    fprintf('HID NAR BYGRT \n')
+    fprintf('****************************** \n')
+    fprintf('BLUE in the RIGHT HAND \n')
     fprintf('\n')
     
     
